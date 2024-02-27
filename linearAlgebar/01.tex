@@ -1,0 +1,73 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{graphicx} % 插图片
+\usepackage{amsmath}  % 数学公式拓展
+\usepackage{float}    % 浮动体控制
+\usepackage{listings} % 插入代码，不过据说 minted 的效果更好一些
+\title{
+	线性方程组
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+\date{February,19 2024}
+\begin{document}
+\maketitle
+\section{线性方程组的概念}
+\paragraph{线性方程：}线性方程就是$n$元$1$次方程，要求没有二次项，没有交叉项，也没有其他函数。
+
+例子：$a_1x_1+a_2x_2+\dots+a_nx_n=b$
+\paragraph{线性方程组：}由\textbf{线性方程}组成的方程组，如：
+$$\begin{cases}
+	a_{11}x_1+a_{12}x_2+\dots+a_{1n}xn=b_1\\
+	a_{21}x_1+a_{22}x_2+\dots+a_{12}xn=b_2\\
+	...
+	a_{m1}x_1+a_{m2}x_2+\dots+a_{mn}=b_m
+\end{cases}$$
+我们将$x_1,x_2\dots x_n$称为变元，$a_{11},a_{12}\dots a_{1n} \dots a_{mn}$称为系数,$b_1,b_2,\dots b_m$称为常数。
+
+\paragraph{解}若$c_1,c_2,\dots c_m$带入方程$x_1\dots x_n$，使得每个等式都成立，称
+$\begin{pmatrix}
+	c_1\\
+	c_2\\
+\vdots\\
+	c_m
+\end{pmatrix}$
+为一组解,所有解构成的集合叫做解集
+
+\section{高斯-约当消元法}
+\paragraph{基本思路}从左向右，从上向下，依次消元，做出阶梯矩阵后从下向上消元，将增广矩阵约化为简化阶梯矩阵。
+\paragraph{初等变换}针对方程组有三种初等变换，经过初等变换，方程组的解不变。
+\begin{enumerate}
+	\item 把某方程的某倍数加到另一方程上\\
+	\item 互换两方程的位置\\
+	\item 用非零数乘以某方程
+\end{enumerate}
+
+\paragraph{矩阵}
+把$s \times m$个数排成$s$行$m$列，就称为$s\times m$ 矩阵。元素均为0的称做0矩阵，记作\textbf{0}，$s=m$的矩阵称为方阵。
+
+\paragraph{矩阵的初等行变换}有三种初等行变换。
+\begin{enumerate}
+	\item 把某行的某倍数加到另一方程上\\
+	\item 互换两行的位置\\
+	\item 用非零数乘以某行
+\end{enumerate}
+
+\paragraph{阶梯形矩阵和简化阶梯形矩阵}
+
+阶梯形矩阵要求：1.元素全为$0$的行（零行）在矩阵最下方     2.左边第一个非零元素（主元）的列指标随行指标\textbf{严格}递增
+
+简化阶梯形矩阵要求：1.是阶梯形矩阵    2.每个主元都是1   3.每个主元所在列的其余元素都是0
+
+简化阶梯形矩阵例
+$$\begin{bmatrix}
+	1&0&0&0&3\\
+	0&0&1&0&2\\
+	0&0&0&1&1\\
+	0&0&0&0&0\\
+	0&0&0&0&0
+\end{bmatrix}$$
+
+\end{document}

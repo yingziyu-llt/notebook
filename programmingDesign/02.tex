@@ -1,0 +1,176 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+
+\title{
+	从C到C++
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\date{Feb 23,2024}
+
+\begin{document}
+\maketitle
+
+\section{引用的概念和应用}
+定义引用：类型名\&引用名=某变量名;
+
+只是别名，修改引用的同时会修改原值。
+
+定义的时候必须要初始化，不能修改引用的对象，不可引用常量和表达式。
+
+e.g. int \&r = n;
+
+\begin{lstlisting}[language=C++]
+double a = 4,b = 5;
+double &r1 = a;
+double &r2 = r1;
+r2 = 10;
+cout << a << endl; //10
+r1 = b;
+cout << a << endl; //5;
+\end{lstlisting}
+
+引用还可以作为函数返回类型，只需要return相关的变量，就可以ruturn对应变量的引用。
+
+可以用const修饰，不能修改用const修饰的引用。
+
+\begin{lstlisting}[language=c++]
+int n = 4;
+const int &a = n;
+a = 10;//编译错误
+n = 10;//正常
+\end{lstlisting}
+
+const T\&的引用是不可以用来初始化T \&的内容的，二者的类型其实不相同，只能在强制类型转化后进行初始化。
+
+\section{const 关键字}
+
+\subsection{定义常量}
+
+\begin{lstlisting}[language=C++]
+const int MAXVALUE = 10000000;//建议常量使用全大写
+const string NAME = "yingziyu";
+\end{lstlisting}
+
+\subsection{定义常量指针}
+常量指针指向的内容只读，但其自己可以被修改指向别的内容。
+
+\begin{lstlisting}[language=C++]
+const int *p = n;
+* p = 5 //CE
+n = 5;  //OK
+p = &m; //OK
+\end{lstlisting}
+
+不可将常量指针赋值给普通指针。
+
+常量指针还可以避免函数内部将参数指针的所指的内容修改。
+\begin{lstlisting}[language=C++]
+void myPrint(const char *s){
+	strcpy(s,"this");    //CE
+	printf("%s",s);      //OK
+}
+\end{lstlisting}
+
+
+
+\section{动态内存分配}
+
+\subsection{分配一个变量}
+用new申请内存，delete释放内存
+\begin{lstlisting}[language=C++]
+int *pn = new int;
+*pn = 5;
+\end{lstlisting}
+\subsection{分配一个数组}
+P = new T[N];
+
+T是任意类型名，N是一个整数。P指向数组的第一位。
+
+\subsection{delete}
+销毁用new分配出来的动态空间。
+
+只能delete new出来的空间。
+
+\begin{lstlisting}[language=C++]
+int *p=new int;
+*p = 5;
+delete p;
+delete p;//异常，不可多次delete
+\end{lstlisting}
+
+delete数组，需要加[]
+\begin{lstlisting}[language=C++]
+int *p = new int[100];
+p[0] = 1;
+delete[] p;coi
+\end{lstlisting}
+
+\section{内联函数，函数重载，函数缺省参数}
+
+\subsection{内联函数}
+
+函数调用有时间开销，若函数本身很简单，而且多次被执行，就会导致调用时间开销很大。
+
+内联函数在被编译器处理的时候，是将内联函数代码直接插入调用语句的位置，而不会调用。
+
+\begin{lstlisting}[language=C++]
+inline int Max(int a,int b)
+{
+	if(a > b) return a;
+	return b;
+}
+\end{lstlisting}
+
+但内联函数会使得代码长度变长，可执行文件大小变大。
+
+\subsection{函数重载}
+
+函数名字相同，参数类型或个数不同，就可以重载函数。
+
+需要保证没有二义性。
+
+\subsection{缺省}
+
+定义函数的时候可以让\textbf{最右边的连续若干个}参数有缺省，调用时不写参数就是缺省
+\begin{lstlisting}
+void func(int x1,int x2 = 1,int x3 = 2)
+{}
+func(10);//==func(10,1,2);
+func(10,8);//==func(10,8,2);
+func(10,,8);//ERROR
+\end{lstlisting}
+
+\end{document}

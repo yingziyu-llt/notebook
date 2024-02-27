@@ -1,0 +1,36 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+
+\title{
+	07 重积分
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+\section{二重积分的概念和性质}
+\subsection{引入}
+\paragraph*{一元函数的积分} 一元函数的积分的核心是分割求和，将连续函数分割成大量小的微元，从而便于求和。其公式为$$\int_a^b f(x) = \lim_{n\to\infty}\sum_{i=1}^n f(x_i) \Delta x_i$$
+\paragraph*{一元函数积分的性质}
+
+1.线性性质 $\int_a^b f(x)+g(x) = \int_a^b f(x) + \int_a^b g(x)$
+          $\int_a^b kf(x)=k\int_a^bf(x)$
+
+2.保号性:若 $\forall x \in D\ f(x)\leq g(x)$ 或仅在有限个点上不满足该条件，都有 $\int_a^b f(x) \leq \int_a^b$
+
+3.可加性：$\int_a^b f(x)=\int_a^c f(x) + \int_c^b f(x)$
+
+4.积分中值定理：若 $f(x)$ 在 $[a,b]$ 上连续 $\exists \xi \in [a,b]$使得 $\int_a^b f(x) = f(\xi)*(b-a)$
+
+\subsection{二重积分}
+\paragraph{分割} 我们把一个区域$D$划分为$n$个子区域，分别称作$D_1,D_2\dots D_n$，要求$D_1 \cup D_2 \cup \dots D_n = D$，且都不相交
+\paragraph{定义} 设$z=f(x,y)$是定义在有界闭区域$D$上的函数，对其任意分割$\{D_1,D_2,\dots D_n\}$，及任意选择$(x_i,y_i) \in D_i$，称$$\lim_{\lambda\to 0}\sum_{i=1}^{n}f(x_i,y_i)\Delta S_i$$为$f(x,y)$在$D$上的二重积分，记作$\iint_D f(x,y)$dxdy
+\paragraph{二重积分的几何意义} 以$z=f(x,y)$为顶面的直柱体的体积
+
+\end{document}
