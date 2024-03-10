@@ -1,0 +1,118 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	机器学习基础
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+\date{3/7/2023}
+\begin{document}
+\maketitle
+
+\section{定义}
+模型在某些任务上基于经验，利用算法的设计和分析，使模型的表现得到提升。
+
+是一个从数据到知识的过程。
+
+几大要素：任务，经验，表现
+
+\section{任务}
+有监督学习：分类问题，回归问题... -> 数据带label
+
+无监督学习：聚类，密度估计，降维... -> 数据不带label
+
+半监督学习 -> 数据有带label,也有不带label的
+
+弱监督学习 -> 数据的label级别与任务需要的label不对等，如像素级的任务但数据只有图片级的label
+
+强化学习
+
+\section{经验}
+
+\section{表现}
+从一个随机测试数据X,衡量预测值和真是标签之间的远近程度。
+
+loss function
+
+二分类：01loss
+
+回归分析：square loss$loss(Y,f(X))=(f(X) - Y)^2$
+
+\section{线性模型}
+可以做离散也可以做连续的，连续值的预测是一个回归问题，离散值的预测是一个分类问题。
+
+线性模型就是学习特征的一种线性组合来预测y,即：$$f(x)=w^Tx+b$$
+
+其中$w$,$b$是要学习的模型参数。$w$反映了各个元素对房价的影响权重。
+
+实际就是对于数据集$D=\{(x_1,y_1),(x_2,y_2)\dots (x_n,y_n)\}$，找到一组$w,b$，使得$f(x)=w^Tx+b$，且$f^*=argmin_f \mathtt{E}[(f(X)-Y)^2]$
+
+用经验均值代替差异，只需要最小化$$\hat{f}=\frac{1}{n}\sum_{i=1}^n(f(x_i)-y_i)^2$$
+
+经过一系列化简，可以得到：
+
+$$J(\beta)=(A\beta-Y)^T(A\beta-Y)$$
+
+其中$A=[x_1,x_2\dots,x_n]^T$,$\beta=(W,b)$,$Y=[y_1,y_2\dots y_n]^T$
+
+对$J(\beta)$对$\beta$求偏导，可以得到$(A^TA)\beta=A^TY$
+
+若$(A^TA)$可逆，则可以直接求解，不可逆的时候需要正则化。
+
+要是$n<p$的话，不可逆，不能用下述方法来做。->样本数量小于特征维度
+
+\subsection{梯度下降法}
+可逆的时候：求逆$\rightarrow$算起来太慢。使用梯度下降法。使用条件：$J(\beta)$恰好是个convex的函数。
+
+过程：initial:$$\beta^0$$
+update:$$\beta^{k+1}=\beta^t+\frac{\alpha}{2}\frac{\partial J(\beta)}{\partial \beta}|t$$
+stop:$$\frac{\partial J(\beta)}{\partial \beta}|t < \epsilon$$
+
+算法参数分析：$\alpha$大：残差大，速度快，可能出现震动。$\alpha$小：速度慢，准确性好
+
+不可逆的时候，没有提供足够的信息来估计每个trait的权重的：1.BoW(bag of words)方法，降维，将大的样本转化为几个特征表示的向量组。
+
+2.正则化
+\subsection{正则化}
+既然不能提供足够的信息，那就编信息。
+
+假设参数有先验的分布。不妨让参数$\beta$符合高斯分布/拉普拉斯分布......
+
+只需要：$\hat{\beta}_{MAP}=arg\max log(p(X|\beta) + log(p(\beta)))$
+
+经过一些推导：$$\hat(\beta) = argmin(\sum (Y_i - X_i\beta)+\lambda ||\beta||)$$
+$$\hat(\beta)=(A^TA+\lambda \mathbf{I})^{-1}A^TY$$
+
+
+\end{document}

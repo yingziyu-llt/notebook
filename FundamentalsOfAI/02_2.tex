@@ -92,9 +92,40 @@ $$E(f)=\frac{1}{N}\sum^N_j=1f(j)$$
 一个变量偏离期望的时候，另一个变量也偏离期望的趋势
 
 \subsection{随机变量的分布}
-\paragraph{高斯分布}$$$$(公式后补)
+\paragraph{高斯分布}$$\mathcal {N} (x;\mu,\sigma^2)=\sqrt {\frac {1} {2\pi\sigma^2}}exp (-\frac {1} {2\sigma^2} (x-\mu)^2)$$
 
 \subsection{学派}
 \paragraph{频率学派}用可重复的事件来计量事情发生的可能性
-\paragraph
+
+\subsection{最大似然估计，最大后验估计}
+$$\theta_{MLE}=arg\max{log p(X|\theta)},p(X|\theta)=\Pi^n_{i=0}p(x_i|\theta)$$
+
+最大后验估计：将参数视为一个随机变量，从一个先验分布$p(\theta)$中取样而来。
+
+$$\theta_{MAP}=arg\max\ p(\theta|X)=argmax\ p(X|\theta)p(\theta)$$
+
+MLE和MAP的区别：MLE高度依赖于数据，相信数据是均匀采样的。而MAP依赖于先验模型，相信数据符合某种分布。
+
+\section{信息论}
+\subsection{直觉}不太发生的事情发生了比很可能发生的事情发生了更有信息量
+
+概率越小的事情发生，信息量越大。
+
+希望用一种方式对信息进行量化：可能性越小，信息量越大;必然事件没有信息量;独立事件的信息应该具有可加性
+
+$$I(x)=-\log P(x)$$
+
+香农熵：量化整个概率分布中的不确定性，香农熵越大，信息量越大。
+$$H(x)=E_{x~P}[I(x)]$$
+
+是该分布中抽取事件信息量的期望值，给出了平均编码从分布P中抽取符号所需的位数的下界。
+
+KL散度：有两个关于同一个随机变量的两个不同分布P和Q,可以用KL散度衡量两个分布有多少不同。
+
+$$D_{KL}(P||Q)=E[\log \frac{P(x)}{Q(x)}]=E[\log P(x) - \log Q(x)]$$
+
+KL散度是非负的，它是不对称的。
+
+交叉熵：和KL散度类似，但是多了一项香农熵。多数情况下
+$$H(P,Q)=H(P) + D_{KL}(P||Q)$$
 \end{document}

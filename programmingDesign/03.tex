@@ -10,19 +10,19 @@
     backgroundcolor=\color{black!5}, % set backgroundcolor
     basicstyle=\footnotesize,% basic font setting
 }
-%\lstset{
-%    basicstyle          =   \sffamily,          % 基本代码风格
-%    keywordstyle        =   \bfseries,          % 关键字风格
-%    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
-%    stringstyle         =   \ttfamily,  % 字符串风格
-%    flexiblecolumns,                % 别问为什么，加上这个
-%    numbers             =   left,   % 行号的位置在左边
-%    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
-%    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
-%    showstringspaces    =   false,
-%    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
-%    frame               =   lrtb,   % 显示边框
-%}
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
 
 \lstdefinestyle{Python}{
     language        =   Python, % 语言选Python
@@ -47,13 +47,13 @@
 \maketitle
 \section{基本知识}
 
-%\paragraph{抽象}将客观食物共同特点归纳出来\rightarrow形成数据结构\rightarrow将行为归纳出来\rightarrow编写方法\rightarrow形成一个class
+\paragraph{抽象}将客观食物共同特点归纳出来$\rightarrow$形成数据结构$\rightarrow$将行为归纳出来$\rightarrow$编写方法$\rightarrow$形成一个class
 
 \paragraph{封装}将数据结构和函数捆绑在一起，形成类
 
-%面向对象的程序=类+类+类+\dots +类
+面向对象的程序=类+类+类+$\dots$ +类
 
-%类\rightarrow 成员变量+成员函数
+类$\rightarrow$ 成员变量+成员函数
 
 \begin{lstlisting}[language=C++]
 class CRectangle//用C作为第一个字母
@@ -66,5 +66,83 @@ class CRectangle//用C作为第一个字母
 };
 \end{lstlisting}
 
+\paragraph{访问成员变量}:变量.成员;指针->成员;引用名.成员名
+
+\paragraph{成员函数定义}：可以将函数体和类的定义分开写。要用类名::函数名来定义
+\begin{lstlisting}[language=C++]
+class CRectangle
+{
+	public:
+		int w, h;
+		int Area(); //成员函数在此声明
+		int Perimeter();
+		void Init( int w_, int h_ );
+};
+int CRectangle::Area() {
+	return w * h;
+}
+int CRectangle::Perimeter() {
+	return 2 * ( w + h);
+}
+void CRectangle::Init( int w_, int h_ ){
+	w = w_; h = h_;
+}
+\end{lstlisting}
+
+\paragraph{访问权限}private:私有成员，只能在class内部访问。
+
+public:公有成员，可以在外部访问。
+
+protected:保护成员
+
+缺省当作private
+
+在类的成员函数内部，可以访问当前对象的全部属性和函数，同类其他对象的全部属性和函数。
+
+\section{构造函数}定义了构造函数，就不会默认生成无参数构造函数了。
+
+对象生成，就不能再次被构造，在生成的的时候默认调用构造函数。
+
+要求：构造函数必须无返回值，返回值类型也不可为void
+
+若调用构造函数参数不足，缺省为0
+
+对于数组，可以认为是依次使用构造函数。
+
+拷贝构造函数
+\begin{lstlisting}[language=C++]
+Complex c1;//调用缺省构造函数
+Complex c2(c1);//将c2初始化为c1
+\end{lstlisting}
+
+自己定义拷贝构造函数（下述代码在class内）
+\begin{lstlisting}[language=C++]
+Complex(Complex &e){
+	real = e.real;
+	imag = e.real;
+	cout << ""COPY";
+}
+\end{lstlisting}
+
+不允许形如X::X(X a)的构造函数
+
+若某函数的一个参数是class A的对象，那么该函数调用时，会调用拷贝构造函数
+
+若返回值是A的对象，那么函数返回的时候，A的拷贝构造函数会被调用
+
+"="赋值不会导致复制构造函数被调用
+
+参数表使用T& obj做参数，可以减小开销，还可以使用const修饰。
+
+类型转化构造函数：只有一个参数的构造函数，运行时会自动建立一个无名变量，调用该构造函数，然后赋值。使用explicit关键字修饰，只可以显式调用。
+
+\section{析构函数}和构造函数恰好相反。名字要与类名相同，在前面加~，没有参数和返回值，每个类只有一个析构函数。在对象消亡时被调用，做对象消亡前做好善后工作。
+
+在定义时没有写析构函数，就会自动生成空的析构函数。
+
+对象数组在生命周期结束的时候，其各个元素的析构函数都会被调用。
+
+delete函数也会造成析构函数的调用，在函数调用返回后也会被调用。
 
 \end{document}
+

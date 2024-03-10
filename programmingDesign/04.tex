@@ -1,0 +1,121 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	面向对象进阶
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{内联函数}
+在成员函数前面加上inline关键字，会在编译的时候直接粘贴到目标位置，节省了时间和内存开销，但会增加编译时间。
+
+\section{函数参数的默认值和重载}
+任何有定义的表达式（如x=max(a,b)）都可以作为默认值。
+成员函数也可以重载,也可以带默认值参数
+构造函数可以带默认值参数。在定义的时候写好默认值即可，不需要在类外边写内容的时候写初始值。
+使用缺省参数的时候要注意避免函数重载的二义性。
+如：
+\begin{lstlisting}[language=C++]
+class Location{
+	...
+	void valX(int val=0) {X = val};
+	int valX() {return x;}
+}
+A.valX();//编译错误，二义性
+\end{lstlisting}
+
+\section{this指针}
+指向成员函数作用的对象
+
+非静态成员函数可以用this代表指向该函数作用对象的指针。
+
+\section{静态成员函数和变量}
+在说明前加static标识可以让其变为静态变量
+静态成员变量一共就一份，所有对象共享这个变量。
+sizeof不计算静态成员变量
+静态成员函数也不具体作用于某个对象，也不属于某个特定的对象。用类名::成员名或常规成员访问方法访问都行。
+实际上是全局变量/全局函数
+
+静态成员函数不能访问非静态成员变量，不能调用非静态成员函数！
+
+\section{const 标识符}
+\paragraph{常量对象}在某个对象前面加const,可以定义常量对象，这种对象不能被修改。其只可以使用构造函数、析构函数、const标识的函数
+
+\paragraph{常量方法}在函数后面加const关键字，可以将函数变为常量方法。不能修改非静态的函数值，也不能调用其他非静态函数。const类型的对象不能调用非const的成员函数。
+在定义和声明常量成员函数的时候，都要加上const关键字。
+\begin{lstlisting}[language=C++]
+class Sample {
+public:
+	int value;
+	void GetValue() const;
+	void func() { }
+};
+void Sample::GetValue() const//这里不写const会出错
+{
+	value = 0; // wrong
+	func();	   // wrong
+}
+int main()
+{
+	const Sample o;
+	o.GetValue(); //
+	return 0;
+}
+//缺少无参构造函数
+\end{lstlisting}
+
+注意，const可以构成一个重载。
+
+同时需要注意的是，可以传const\ T\&来节约内存开销
+
+\section{封闭类}
+\subsection{定义}\paragraph{成员对象}一个类的成员变量类型是另一个类
+\paragraph{封闭类}有成员对象的类叫做封闭类。
+\subsection{使用}
+使用封闭类的时候，需要定义构造函数。
+\begin{lstlisting}[language=C++]
+类名::构造函数(参数表):成员1(参数表),成员2(参数表)...
+{
+}
+\end{lstlisting}
+在使用的时候，先执行所有成员变量的生成，在执行封闭类的生成，调用次序和对象成员声明顺序一致，与在初始化列表的位置无关。
+消亡时先执行封闭类的析构函数，再执行成员变量的析构函数，顺序和生成时正好相反。
+const和引用的成员变量必须在成员初始化列表里面进行。
+
+\subsection{友元}
+friend关键字修饰，可以修饰类或者函数。
+
+\end{document}

@@ -1,0 +1,148 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	运算符的重载
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{含义}
+将cpp默认的运算符进行重新的定义，使得其可以在非默认类型下正常运行，叫做重载。
+
+可以让程序更加直观。
+
+\section{重载}
+\subsection{常规运算符的重载}
+格式：
+\begin{lstlisting}[language=C++]
+Class Complex
+{
+public:
+	double real,image;
+	Complex(double r = 0,double i = 0):real(r),image(i){}
+	Complex operator+ (const Complex& e)
+	{
+		Complex newComplex(real,image);
+		newComplex.real += e.real;
+		newComplex.image += e.image;
+		return newComplex;
+	}
+}
+Complex operator- (const Complex &a,const Complex &e)
+{
+	Complex newComplex(a.real,a.image);
+	newComplex.real -= e.real;
+	newComplex.image -= e.image;
+	return newComplex;
+
+}
+\end{lstlisting}
+\subsection{=的重载}
+只能重载为成员函数。
+
+两边的类型可以不匹配。
+
+举例：
+\begin{lstlisting}[language=C++]
+String & operator= (const char* str);//类里面定义
+String &operator= (const String &str);
+String& String::operator= (const char* str)
+{
+	del []s;
+	s = new char[strlen(str) + 1];
+	strcpy(s,str);
+	return *this;
+}
+String& String::operator= (const String &str)
+{
+	if(this == &str) return *this;
+	delete [] s;
+	s = new char[strlne(str.s) + 1];
+	strcpy(s,str.s);
+	return *this;
+}
+\end{lstlisting}
+
+为什么要返回引用？和cpp的原生=运算符保持一致，便于处理a=b=c的式子。
+
+\subsection{重载为友元}
+一般来说是重载运算符作为成员函数。
+
+要是不能满足要求，可能需要重载为普通函数。e.g. 3+a(用成员函数会报错,3没有operator+(T a))
+
+为了访问私有变量，使用友元重载为友元普通函数。
+
+只需要在类里声明 friend\ T\ operator+(int\ a,T\ x);即可。
+
+\subsection{流插入运算符的重载}忽略
+
+\subsection{[]的重载}
+返回值应当是int\&之类的。例：
+\begin{lstlisting}[language=C++]
+class Array{
+public:
+	Array(int n = 10) : size(n) {
+		ptr = new int[n];
+	}
+	~Array() {
+		delete [] ptr;
+	}
+	int & operator[](int subscript){
+		return ptr[subscript];
+	}
+private:
+	int size;
+	int *ptr;
+};
+\end{lstlisting}
+
+\subsection{类型转换运算符的重载}
+必须为成员函数。参数表必须为空。不指定返回值类型。
+\begin{lstlisting}[language=C++]
+class ...
+{
+	...
+public:
+	int a;
+	operator int(){
+		return a;
+	}
+}
+\end{lstlisting}
+
+\subsection{自增和自减运算符}
+前置运算符作为一元运算符重载。后置运算符作为二元运算符重载，带一个没有用处的参数
+\end{document}
