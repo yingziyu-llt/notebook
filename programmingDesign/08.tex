@@ -1,0 +1,86 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	IO和文件操作
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{输入输出相关的类}
+istream：输入流，cin就是其中的对象  ostream：输出流，cout是其中对象。
+
+ifstream文件读取类，ofstream：文件写入流，fstream：文件读取+写入流
+
+输入流对象：
+
+cin：与标准输入设备相连，用于从键盘读取数据，也可被重定向为从文件读取数据。
+
+cout：与标注输出设备相连，可以被重定向。
+
+cerr：与标准错误输出设备相连，直接输出
+
+clog：与标准错误输出设备相连，写入缓冲区
+
+istream \&getline(char *buf,int bufSize)：从输入流中读取bufSize，或直到读到'\\n'为止，可以加第三个参数作为分隔符
+
+若超出bufSize，本次读取可行，下次读取会出错。
+
+putback(char c)：把c放回输入流，ignore2
+\section{流操纵算子}
+（在iomanip里面）
+
+整数流的基数，浮点数精度，设置域宽，自行定义
+
+fixed/scientific:定点表示/科学记数法表示
+
+setprecision在浮点上是有效数据，在定点和科学记数法上是小数点位数
+\section{数据的层次}
+建立顺序文件：(fstream)
+
+ofstream outFilr("data",ios::out | ios::binary)
+
+ios::out 输出到文件，覆盖;ios::app：附加模式;ios::ate：任意位置写;ios::binary：二进制模式
+
+还可以：ofstream fout;fout.open("data",ios::out | ios::binary)
+
+ifstream类似，使用和cin很类似。
+
+二进制文件的读写：读InFile.read((char *)\&s,sizeof(s));写：OutFile.write((char *)\&s,sizeof(s));
+
+fstream有seekp成员函数，是移动文件指针的操作。
+
+二进制打开只在windows下和普通打开文件的方法不同，主要是\\r\\n的问题。
+\end{document}

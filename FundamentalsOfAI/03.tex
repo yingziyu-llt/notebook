@@ -36,7 +36,7 @@
 \author{
 	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
 }
-\date{3/7/2023}
+
 \begin{document}
 \maketitle
 
@@ -111,8 +111,13 @@ stop:$$\frac{\partial J(\beta)}{\partial \beta}|t < \epsilon$$
 
 只需要：$\hat{\beta}_{MAP}=arg\max log(p(X|\beta) + log(p(\beta)))$
 
-经过一些推导：$$\hat(\beta) = argmin(\sum (Y_i - X_i\beta)+\lambda ||\beta||)$$
-$$\hat(\beta)=(A^TA+\lambda \mathbf{I})^{-1}A^TY$$
+经过一些推导：$$\hat\beta = argmin(\sum (Y_i - X_i\beta)+\lambda ||\beta||)$$
+$$\hat\beta=(A^TA+\lambda \mathbf{I})^{-1}A^TY$$
 
+容易知道，Ridge Regression得到了一个\textbf{L2}惩罚，画出来一个高维球体;Lasso Regression得到了一个\textbf{L1}惩罚，画出来一个菱形。
+从而：Lasso Regression求出的解是一个稀疏的解,从而有利于降低维度。
+Ridge Regression求出的$\beta$是较小的值
+
+$$\min(A\beta - Y)^T(A\beta-Y)+\lambda pen(\beta)=\min J(\beta) + \lambda pen(\beta)$$
 
 \end{document}

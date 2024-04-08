@@ -1,0 +1,81 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	多态
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{多态}
+\subsection{表现形式1 指针调用虚函数}
+在类的定义里面，前面加了vitural关键字的就是虚函数。只需要写在定义时，实现时不用写。
+
+通过基类指针指向某个同名同参虚函数：若指向的是基类，调用基类虚函数;指向派生类，调用派生类的虚函数。
+
+\subsection{表现形式2 引用调用虚函数}
+派生类的对象可以付给基类的引用。
+
+基类引用调用同名同参虚函数的时候，和指针的情况类似。
+
+\subsection{表现形式3}
+在非构造函数，非析构函数中调用虚函数，也是多态。
+
+在构造函数和析构函数中调用虚函数，不会出现多态。
+
+派生类中和基类中虚函数同名同参的函数自动成为虚函数。
+\subsection{多态的作用}
+使用多态，可以有效减少代码长度，从而优化代码。
+\subsection{虚函数访问权限}
+访问权限只看指针类型中虚函数的访问权限。
+\subsection{多态的实现机理：动态联编}
+有虚函数的类/有虚函数的派生类都有一个虚函数表，用来放虚函数地址。
+
+多态的函数调用语句会被编译横一系列依据基类指针指向的对象中存放的虚函数表的地址。
+\subsection{虚析构函数}
+用基类指针调用析构函数只能调用基类的析构函数。
+
+把基类的析构函数声明为virtual,用基类指针析构的时候，就可以调用派生类的析构函数（按派生的析构函数处理）
+
+不允许虚的构造函数。
+\subsection{纯虚函数和抽象类}
+纯虚函数是没有函数体的函数。
+
+virtual void fun() = 0;
+
+包含纯虚函数的类就是抽象类。抽象类只能作为基类来派生新类来使用，不能创建抽象类的对象。
+
+抽象类的派生必须实现了基类的所有纯虚函数才能变成非抽象类。
+\end{document}

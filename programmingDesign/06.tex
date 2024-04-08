@@ -1,0 +1,114 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	继承和派生
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{为什么要有继承}
+很多对象都有相同的属性，使用继承，避免重复编写，加快编码速率。
+
+举例：学生们都有很多共同的属性和方法，比如姓名、年纪、学号、是否优秀、是否留级等。
+而学生也有很多不同点，如本科生有是否保研、院系，研究生有导师、论文等。
+为了避免重复编码，可以先定义一个基类“学生”，从此派生出本科生、研究生等。
+
+\section{实现}
+语法：class 派生类名:派生方式 基类名
+
+派生类有基类的所有成员变量，但其成员函数不可以访问基类的private成员。
+
+\begin{lstlisting}[language=C++]
+class CStudent{
+public:
+	char name[100];
+	void setname(char* s);
+
+private:
+	int privateNumber;
+	protected:
+	int protectedNumber;
+};
+class CGraduateStudent : public CStudent {
+private:
+	int nDepartment;
+	char szSupervisorName[20];
+
+public:
+	int CountSalary() { ... }
+};
+\end{lstlisting}
+\section{继承和复合}
+继承是“是”关系，派生类B也是一个基类A，也就是A是B的一个上位概念，比如Man和Woman都应该是Human的派生。
+复合是有关系，是类B中有A类型的元素，比如Man里面复合了Brain元素。
+
+派生类里面可以有和基类相同名称的元素和函数，叫做覆盖，调用时默认值是覆盖的元素。若在派生类里面访问基类的某被覆盖的元素，需要基类名称::
+
+\section{访问权限}
+private标识符：只能在基类的方法和友元访问
+
+public标识符：基类成员和友元，派生类的成员和友元，其他函数
+
+protected标识符：基类的成员函数
+
+基类的友员函数
+
+派生类的成员函数可以访问当前对象的基类的保护成员，
+this指向的对象，
+也可以访问其他同类对象的基类的保护成员，
+派生类的友元函数也可以访问基类的保护成员
+
+继承类型：以什么类型继承，基类成员最高访问权限就是这个类型，高于这个的就设置为这个。
+
+\section{构造函数和析构函数}
+创建派生类的对象时，需要调用基类的构造函数。显式调用：\text{derived::derived(arg_derived-list):base(arg_base-list)}
+
+析构函数调用时，自动调用自己的析构函数，然后自动调用基类析构函数。
+
+\section{杂项}
+\subsection{public继承}
+派生类的对象可以赋值给基类对象;
+派生类对象可以初始化基类引用;
+派生类对象的地址可以赋值给基类指针
+
+\subsection{直接基类和间接基类}
+直接相连就是直接基类，中间有类间隔就是简介基类的关系。
+
+声明派生的时候只需列出直接基类就可以了。
+
+\subsection{多继承}
+一个类从多个类继承而来，存在二义性。
+\end{document}

@@ -1,0 +1,177 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	STL
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{string}
+\subsection{初始化}有3种初始化方法。
+\begin{lstlisting}
+strig string1("hello"),string2(8,'x'),string3 = "hello world";
+cout << string2;//xxxxxxxx
+\end{lstlisting}
+不允许以字符和整数来初始化字符串，但可以用字符和整数赋值给字符串，长度过长会抛出错误。
+\subsection{成员函数}
+s.length()：返回字符串长度
+
+s.assign(string src):将src复制到s里面。s.assign(string src,int a,int b)将src里面从a到b的字符垂直过去。
+
+s.at(int dst)：返回dst位置的字符。会进行位置检查，越界抛出异常。
+
+s.append(string src)：将src添加在s后面。s.append(string src,int a,int b)：原理和assign类似。
+
+s.compare(string src):比较s和src,大于为正，小于为负。
+
+s.substr(int a,int b)：从下标为a开始，向后b个字符的字串。
+
+\section{iterator}
+类型名::iterator it;可以看作是指针。
+
+类型名::const_iterator it;常指针。
+
+可以执行++操作，指向容器里面的下一个元素。如果迭代器到达了容器中的最后一个元素的后面,则迭代器变成past-the-end值，访问其是非法的。
+
+迭代器可以由弱到强分为5类。
+输入（进行只读），输出（进行读写），正向，双向，随机访问。后面的拥有前面的全部功能。
+
+vector,deque随机迭代器，set,map,list双向迭代器，queue,stack,priority_queue不支持迭代器
+
+
+\section{顺序容器}
+所有都有按照字典序比较两容器的运算符，=,<,>,<=,>=,!=
+
+empty(),max_size(),size(),swap()
+begin 返回指向容器中第一个元素的迭代器
+end 返回指向容器中最后一个元素后面的位置的迭代器
+rbegin 返回指向容器中最后一个元素的迭代器
+rend 返回指向容器中第一个元素前面的迭代器
+erase 从容器中删除一个或几个元素
+clear 从容器中删除所有元素
+
+front(),back()返回一个reference
+
+push_back(),pop_back()
+\subsection{vector}
+动态数组, 存取任何元素都能在常数时间完成, 在尾部增删变量
+具有较佳的性能
+\subsection{deque}
+双端队列, 存取任何元素都能在常数时间完成, 在首尾部增删变量
+具有较佳的性能
+
+push_front(),push_back()
+\subsection{list}
+链表。
+只能使用双向迭代器。
+
+push_front: 在前面插入
+
+pop_front: 删除最前面的元素
+
+sort: 排序
+
+remove: 删除和指定值相等的所有元素
+
+unique: 删除所有和前一个元素相同的元素
+
+merge: 合并两个链表, 并清空被合并的那个
+
+reverse: 颠倒链表
+
+splice: 在指定位置前面插入另一链表中的一个或多个元素, 并在另一链表中删除被插入的元素
+
+\section{关联容器}
+所有都有按照字典序比较两容器的运算符，=,<,>,<=,>=,!=
+
+empty(),max_size(),size(),swap(),find(),lower_bound(),upper_bound(),count(),insert()
+\subsection{set/multiset}
+集合，不允许相同元素。而multiset允许相同元素。
+
+\subsection{map/multimap}
+映射，存的是key-value的值并对key排序。multimap允许相同key的存在。
+
+\section{容器适配器}
+所有都有按照字典序比较两容器的运算符，=,<,>,<=,>=,!=
+
+empty(),max_size(),size(),swap()
+\subsection{stack}
+栈
+\subsection{queue}
+队列
+\subsection{priority_queue}
+优先队列
+
+\section{算法库}
+变化序列算法:
+copy, remove, fill, replace, random_shuffle, swap, …
+会改变容器
+
+非变化序列算法:
+adjacent-find, equal, mismatch, find, count, search,
+count_if, for_each, search_n
+
+以上函数模板都在 <algorithm> 中定义
+
+还有其他算法, 例如 <numeric>中的算法
+
+查找的时候要保证：a!<b&&b!<a=>a==b
+
+需要注意的是，大部分算法库里面的算法都有两个重载，即加一个比较函数/函数对象的和不加的。
+
+不变序列方法：不会修改算法作用的容器和对象，对于所有种类都适用，复杂度为O(n)。min_element,min,count,find_if,count,count_if,
+adjacent_find,lexicographical_compare,equal,search...for_each要求f不能修改传入的容器。
+
+变值算法：for_each,transform...
+
+transform(it in,it out,Uop uop):对[first, last)中的每个迭代器I,
+执行 uop(* I); 并将结果依次放入从 x 开始的地方
+要求 uop(* I) 不得改变 * I 的值
+本模板返回值是个迭代器, 即 x + (last-first)
+x可以和 first相等
+
+删除算法：将所有应当被删除的元素依次后移到序列尾，不适用于关联型容器。
+
+变序算法：只改变顺序而不改变序列。
+
+排序算法：一般是nlogn的。sort,stable_sort归并排序,partial_sort对区间部分排序，直到最小的n个就位,nth_element求第n大，保证前面的小于第n个小于后面的
+
+\section{函数对象}重载了()的类的对象叫做函数对象。
+
+常见的：(<functional>)greater/less/equal_to
+
+
+\end{document}

@@ -1,0 +1,112 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	深度神经网络基础
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{神经元}
+单个神经元就是一个函数：$$\mathbf{z}=\mathbf{w}^T\mathbf{x}+\textbf{b}$$
+
+w是权重,x叫做输入层，z叫做输出层。由于所有输入层都和输出层连接，所以叫做全连接层。b叫做偏置bias
+
+代码里面喜欢写成：$z=xw$，x是行向量，w是列向量
+
+偏置可以让输出上下浮动，更好适应输入值，让决策界面不一定过原点。
+
+多个神经元：可以获得更多维度的输出。
+
+$$z1=x_1w_{11}+x_2w_{21}+x_3w_{31}+b_1;z_2=\dots$$
+$$z=xW$$
+
+\section{激活函数-从线性到非线性}
+常用激活函数：sigmoid：[0,1]，常用于输出概率
+
+tanh:[-1,1]，常用于回归任务，梯度比sigmoid大，好收敛
+
+ReLU:将负数输出为0,正数输出原先的值。用于特征提取和简化网络优化。可以预防梯度消失。
+
+Leaky ReLU:在负数区和ReLU有区别-不是0,而是将原值乘以一个很小的数$\alpha$，也可以避免梯度消失的问题。
+
+Softmax:在多个输出的时候，用Softmax来归一化
+
+\section{多层感知器(MLP)-分开分不开的点}
+
+输入层->隐藏层->输出层
+
+提取特征->编码；将特征改为数据->解码
+
+\section{损失函数(Loss Function)-量化预测输出和训练数据输出的误差}
+
+和线性模型类似，常用的也是交叉熵、Softmax、SquireLoss，两个向量之间的某范数\textit{L}1 Loss:MAE平均绝对误差
+
+还有很多损失函数，也是研究中的重要的一个部分。
+
+\section{优化}
+\subsection{梯度下降}
+给定网络结构$f(x,\theta)$、定义好的损失函数 $L$和训练数据样本，训练网络的过程是
+通过更新网络参数$\theta$（比如权重、偏置）以最小化误差的过程。
+
+梯度下降（Gradient descent）是一个更新网络参数的方法，此外依然有很多优化
+方法存在，比如BFGS (L-BFGS) 和 conjugate gradient (CG)，但这些方法往往需要
+很多计算量，因此很少使用。
+
+对于参数$\theta$，总做：$\theta:=\theta - \frac{\partial L}{\partial \theta}$ L : Loss Function
+
+\subsection{反向传播}
+实际上就是计算所有参数$\frac{\partial L}{\partial \theta}$
+
+\subsection{SGD}
+随机梯度下降：每次不使用所有训练样本，而是随机选出一批（batch）数据更新误差。这批叫做mini-batch，数量叫batch size。通过多次更新，最后可以覆盖整个数据集，叫做一个epoch。
+
+\subsection{自适应学习率}
+自动控制学习率，从而快速准确的收敛到鞍点。
+
+\subsection{超参数选择}
+必须在验证数据集里面调参，不允许在测试集里面调参。可以调网络结构，loss function,batch size，weight Decay里面的$\lambda$等等。
+
+数据不足的时候，使用cross validation
+
+\section{正则化}
+数据增强，增加更多数据
+
+提前停止法
+
+Weight Decay
+
+dropout：在训练的时候随机对隐藏输出置为0.测试和使用的时候不置0，可以认为是把整个网络拆分成好多个小的子网络，测试的时候各个子网络投票决定结果。
+\end{document}

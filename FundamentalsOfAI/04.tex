@@ -1,0 +1,139 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	线性回归2
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{广义线性回归模型}
+对于任意可微函数，都可以有：$$g(y)=wX+B$$
+叫做广义线性回归模型。
+
+\section{分类问题(Logistic Regression)}
+分类就是一种离散的预测。
+
+如何应线性模型？
+将标签转化为数字：$y\in \{0,1\}$
+
+做广义线性回归模型。$y=g^{-1}(w^Tx+b)$，其中$g:=func\ which\ in\ [0,1]$
+
+常用函数（分类器）：Logistic Function(S形曲线)$y=\frac{1}{1+e^{-(w^Tx+b)}}$
+
+使用的时候$\log\frac{y}{1-y}=w^Tx+b$
+称$\log\frac{y}{1-y}$为logit
+
+\subsection{Function}
+输出映射到[0,1]之间。sigmoid函数：
+
+$$f(x)=\sigma(\sum(w^Tx+b))$$
+
+\subsection{Object}
+使用交叉熵来做loss function.从而使预测分布和真实分布之间的K-L散度最小。
+
+怎么做？$-\sum(\hat y^i\log P(x^i) + (1-\hat y^i)\log(1- P(x^i))$
+
+为什么不使用Square Loss？根据导数推导出来，在远远远离正确答案的时候，梯度为0,无法正常下降，收敛非常非常慢。
+
+\subsection{Methods}
+
+梯度下降。略
+
+\subsection{局限性}
+只能解决线性可分的问题，不能处理异或问题。
+
+feature transformation。
+对于异或问题，可能可以找到一种变换的方法，使得其重新转化成线性可分的问题。非常困难，不一定能找到。
+进行级联Logistic Regression,第一层进行feature transfomathon,第二层分类。-> 和DNN相关
+
+\section{线性分类器解决图片分类问题}
+\subsection{挑战}
+视角变化、光照不同、背景杂乱、形变、类内差异，context
+
+\subsection{流程}
+数据驱动的方法。收集数据和标签的数据集，用机器学习算法训练一个分类器，在测试图片上评估分类器。
+
+线性分类器是有参算法。
+
+一般来说，神经网络最后一层是线性层，就是$f(W,x)=W^Tx+b$，输出是个向量，表示各类类别的可能性（score）。
+
+参数中W的各个行，可以认为是一个滤波器，专门用来提取某一个类别的共同特征。
+
+从几个角度解释：对图片进行多次二分类。
+
+\section{多项式线性回归分类器}
+\subsection{背景}
+线性分类器产出的结果是一个值，不是概率，数据缺乏意义。
+
+\subsection{做法}
+在线性分类套个函数：soft_max函数。
+
+soft_max函数是sigmoid的推广，是一个归一化的指数函数，所有结果的加和为1。
+
+将所有项全部加指数，然后归一化。
+
+用交叉熵作为Loss Function就可以了。
+
+\section{最近邻分类器KNN}
+是一个无参的方法。但还是有监督学习，是要有训练数据的。
+
+训练就是记住所有图片，测试就是将测试数据和所有训练数据比较，找到最像的，取这个的label作为结果。
+
+比较两个图片相似度的方法：L1 Distance:$d_1(I_1,I_2\sum_p|I_1^p-I_2^p|$
+
+k近邻：majority vote,找一个点附近最近的点哪个label最多，就取这个label做结果，可以减少异常值的影响。
+
+有超参数：k选取和L的选择，选择的效果和问题与数据集紧密相关，需要多次尝试。
+
+\subsection{如何选择超参数？}
+选择train最好参数：不好，过拟合;选择test最好参数：不好，不知道test;将数据分成train和validation两部分，只在train上训练，在validation数据集上面选择超参数，较好。
+
+最好的方法：Cross Validation：将数据分成很多个部分，每次使用不同的fold作为验证集，取平均效果最好的超参数，适用于小数据集，耗时间。
+
+最后只在测试数据上面运行一次。
+
+\section{聚类}
+无监督学习
+
+将相似的内容聚在一起。特点：类内相似度很高，类间的相似度很低。
+
+方法有：分割方法（k聚类等），层级方法
+
+\subsection{K means}
+流程：input->initialize->classify->re-center->classify->...->Terminate
+
+问题：结果对初始的随机中心敏感，所以要尝试不同的随机种子，且尽量让种子相互远离；对离群值敏感
+\end{document}

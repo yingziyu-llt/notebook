@@ -1,0 +1,126 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	卷积神经网络
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{目的}
+对于高维数据，不能对于每个像素进行建模，就是建起来了也放不进内存，所以不能直接建模。
+
+同时，人眼也不是一个全连接层，对于图片也有平移不变性，所以不能用全连接层建立模型。需要用filter卷积后存入。
+
+\section{卷积}
+特征：当滤波器的局部路径在某个位置很像，那么卷积操作输出序列的某个点就会很高。
+
+参数：filter,padding,strides
+
+感受野：特征图上某个点在原始图片上的范围大小叫做感受野，一般来说，感受野越大越好，但会带来参数数量的迅速变大，最后导致极难调参。
+
+对于分割类的模型，使用小的感受野可能效果会更好，可以更加精确的分割内容。
+
+\section{优化}
+\subsection{空洞卷积}
+目的还是增加感受野，同时避免增加参数。在filter上面插入一些0.dilation rate:插0的比例。
+
+\subsection{pooling algorithm（池化算法）}
+目的：增强平移不变性。
+
+空间金字塔池化：对原数据多次pooling,变成很多张特征图，拼接在一起，再去训练。
+
+\subsection{Hieratchial Representation Learning（分层表示学习）}
+低层次的特征是很low leval的特征，是细粒度的特征，而高层次的特征是粗粒度的特征，会丢失特征。
+
+\subsection{Convolutional Architectures（卷积神经⽹络结构）}
+AlexNet:第一个比较成功的图像分类网络。
+
+VGG:用小filter，大量连续的卷积层，产生大量非线性的内容。
+
+ResNet:增加了一个残差块。
+
+SqueezeNet, MobileNet, ShuffleNet：轻量化卷积网络。
+
+\subsection{反卷积}
+在原来的输入上插入了一些0,输出的伪书反而变大了。
+
+\section{应用}
+图片分类（略）
+\subsection{目标检测}
+评价：交并比(IoU)：选择预测结果和ground truth两个框，看两个框交集和并集的比，越大越好。
+
+平均准确度（AP）$Precision = \frac{TP}{TP + FP}$
+$Recall = \frac{TP}{TP + FN}$，可以做出Precision-Recall曲线，曲线下的面积就是AP。对所有类别下的AP求均值叫做mAP.
+
+\paragraph{R-CNN}
+在输入图片上生成好多个框(Region Proposals)(使用选择性搜索方法)，将框调整成相同的大小，然后跑CNN分类。
+\subparagraph{NMS}对每个物体都会有好多个分类框，对这些分类框选择打分最高的保留，其他丢弃。
+\subparagraph{局限}搜索速度慢。resize导致宽度和高度变化，影响分类准确性。将每个区域输入VGG里面很慢。非端到端的。
+
+\paragraph{SPP Net}解决了第二和第三个缺陷。使用空间金字塔池化，在特征图上修改大小。在全局上用CNN,然后在选候选区域。
+\subparagraph{局限}依然搜索慢，仍然不是端到端。
+
+\paragraph{fast R-CNN}不用空间金字塔池化改用ROI,用神经网络做分类器。
+
+\paragraph{Faster R-CNN}使用区域提议网络（RPN）代替搜索，真正端到端。
+
+\paragraph{YOLO}
+只看一次而非像先前一样做区域提议。
+
+把目标检测转化为回归问题，使用完全卷积网络（FCN）输出类别标签和位置信息。
+
+\paragraph{SSD}
+和YOLO类似，也是一个单阶段的算法。
+
+\subsection{图像分割}
+Semantic Segmentation：仅按类别分割，不区分个体。Instance Segmentation:区分个体。
+
+本质就是像素级的分类问题。可以用多通道的提议
+\subsubsection{Semantic Segmentation}
+
+FCN：全卷积神经网络。只适用卷积和池化操作，可以接受任意大小的输入图像。encoder适用池化和步幅卷积进行下采样，decoder适用转置卷积进行上采样。
+
+由于卷积会使得特征越来越小，于是使用skip connection
+
+\paragraph{loss function}：像素级的交叉熵：小物体性能差
+
+Dice coefficient:$Dice = \frac{|A\and B|}{|A| + |B|}$
+
+\subsubsection{Instance Segmentation}
+
+Instance Segmentation = Object Classfication + Object Detection + Semantic Segmentation
+
+\end{document}
