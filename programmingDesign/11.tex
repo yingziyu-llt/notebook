@@ -1,0 +1,67 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	cpp 11
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\paragraph{统一初始化方法}使用大括号左作为数组或者容器作为统一初始化方法。
+
+可以防止缩窄，即禁止将数值放入无法放置它的变量。
+
+\paragraph{成员变量默认初始值}
+可以在定义类的时候直接给成员变量设初值。
+
+\paragraph{auto\&decltype}定义变量的时候使用auto可以自动推断类型，用auto做返回值类型需要加->decltype()。decltype:推导表达式的类型。
+
+\paragraph{shared_ptr}用shared_ptr可以让其托管一个new运算符返回的指针，在没有指针指向这个位置的时候自动delete。
+不要混用智能指针和普通指针，否则有crash的可能性（多次delete）。
+
+\paragraph{range for}for(auto i : a)
+
+\paragraph{右值引用和move}一般来说, 不能取地址的表达式, 就是右值。主要目的是提高程序运行的效率, 减少需要进行深拷贝的对象进行深拷贝的次数。
+
+\paragraph{unordered_map}就是个hash表。unordered_map<key,val> ump;ump.insert(pair<key,val>);ump[key] = val;ump.find(key)->unordered_map::iterator;
+
+\paragraph{regex}regex reg("your_regex_here");regex_match("your_string_here",reg)->bool;
+
+\paragraph{lambda}定义：auto fn=[修饰表](参数表){变量}->返回值;调用：fn()
+
+修饰表：=传值，\&传引用
+
+function<返回值(参数表)> func;可以做lambda或者自由函数。
+\end{document}

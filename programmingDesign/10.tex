@@ -135,6 +135,12 @@ empty(),max_size(),size(),swap()
 \subsection{priority_queue}
 优先队列
 
+\section{bitset}
+只有一个参数N。
+
+用bitset函数可以方便访问任何一位。有\&=,|=,^=,<<=,>>=,set()（全部设1）,set(size_t pos,bool val=true)设置某位,reset()设0,filp()全部翻转，flip(size_t pos)翻转某位，
+to_ulong()转成long,to_string转成string,any全为1,none全为0
+
 \section{算法库}
 变化序列算法:
 copy, remove, fill, replace, random_shuffle, swap, …
@@ -165,9 +171,12 @@ x可以和 first相等
 
 删除算法：将所有应当被删除的元素依次后移到序列尾，不适用于关联型容器。
 
-变序算法：只改变顺序而不改变序列。
+变序算法：只改变顺序而不改变序列。reverse,reverse_copy,rotate,rotate_copy：_copy是复制到别的地方
 
-排序算法：一般是nlogn的。sort,stable_sort归并排序,partial_sort对区间部分排序，直到最小的n个就位,nth_element求第n大，保证前面的小于第n个小于后面的
+排序算法：一般是nlogn的。sort,stable_sort归并排序,partial_sort对区间部分排序，直到最小的n个就位,nth_element求第n大，保证前面的小于第n个小于后面的。
+要求支持随机存取迭代器，于是list只能用list::sort
+
+有序区间算法：要求所操作区间必须要从小到大排好序，需要支持随机访问迭代器。binary_search,includes,lower_bound,upper_bound...
 
 \section{函数对象}重载了()的类的对象叫做函数对象。
 

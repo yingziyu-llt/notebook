@@ -1,0 +1,94 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+	生成模型--GAN
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{什么是生成模型}
+CG和生成型：CG是基于先验知识，而生成模型是基于数据的，有一定的概率，统计、深度生成模型也有一定的先验知识。
+
+学习的是概率分布，从概率分布中采样获得结果。
+
+生成->密度估计->无监督表示学习。
+
+从数据中获得潜在结构。
+
+判别模型是找到决策边界P(Y|X),生成模型是生成数据，寻找联合分布P(Y,X)
+
+生成模型也可以同时用来做判别。
+
+\section{Vanilla GAN}
+z(Normal Distribution)->G(generator)->$\hat{x}$/x(输入真实图片)->D(detector)->Fake/Real
+
+$$L_D=-E_{x~p_{data}}[\log D(x)] - E_{x~p_z}[\log(1-D(G(x))]$$最大化检测正确率
+$$L_G=-E_{x~p_z}[\log(D(G(X))]$$最小化检测正确率
+
+先固定G训练D,再固定D训练G。二者都不训练到最优就换。
+
+\section{DCGAN}
+接收一个100维的随机噪声，通过多个转置卷积产生一个图像，整体架构不变。
+
+可以调整参数调整图片生成种类。
+
+\section{VAE}
+Generater+Encoder:输入一个图片，输出一个图片，做两个之间的loss
+Better GAN: encoder+generator+determinter
+
+\section{Conditional GAN}
+输入的除了一个z,还要加一个c,这个c是物体类别的label。
+
+Condition有很多种，可以是类别、文本、文本+图像。这个是一个多模态的生成问题。
+
+结构：D:可以将匹配的文本(由RNN-encoder给出)和图像判断为真实样本，将不匹配的文本和图像判断为伪造样本。
+
+G：可以根据文本(由RNN-encoder给出)生成图像，训练欺骗D。
+
+\section{BiGAN}
+encoder+generator+determinter
+
+\section{CoGAN}
+学习两个语义相近的领域的联合分布，做到从一个领域图像映射到另一个领域。将输入放入两个Vanilla GAN，但G的前几层还有D的最后几层两个网络共享。训练就可。
+
+只能生成一对对图像，但不能给出一张图，获得对应的另一张图。
+
+\section{CycleGAN}
+修改BiGAN,改为$x->G->\hat{x}->D$，重复两次。D读取两个$\hat{x}$。
+
+Cycle Loss$a->G_{AToB}->\hat{b}->G{BToA}->\hat{a}$，loss为$a和\hat{a}$之间的loss。
+
+\end{document}

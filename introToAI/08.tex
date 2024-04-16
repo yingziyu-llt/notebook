@@ -1,0 +1,94 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+  RNN
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+
+MLP和CNN都是将一个样本作为输入，输出一个结果，叫做前馈神经网络(FNN)，为每个输入获得一个输出。
+
+对于时间序列数据集（语言，视频和生物信号），不能用前馈神经网络处理。RNN专门用来处理这类问题。
+
+\section{词的表示}
+\subsection{简单方法}
+one hot vector，建立一个one hot的词汇表。缺点：大词汇量出现维数灾难。所有单词都独立表示，词汇表过于稀疏。
+
+词袋模型：统计出现了哪些词，和他们的出现的频次。缺点：维数灾难，丢失了单词的位置信息。
+
+\subsection{词嵌入}
+用一个FNN提取词汇的特征，将词汇变为一个多维浮点数的向量。
+
+一个好的词嵌入应当是：相似语义信息应当表示相似，应该允许对语义信息进行语义操作；同时，可以用低维向量表示单词。
+
+\subsection{习得词嵌入}
+现有的算法通过阅读大量文本文档获得词嵌入表，从而获得其内部模式。
+
+\section{Word2Vec}
+CBOW:用上下文预测中间的词，多次使用相同的词嵌入表，速度快。Skip-Gram:根据中间词预测上下文。
+
+\section{序列数据}
+one to one:FNN
+
+one to many,many to many...:RNN
+
+\section{Vanilla RNN}
+对于每一个时刻，不仅输入这个时间步下的输入$x_t$,同时还要输入上一个时刻的隐藏状态向量$h_t$，生成输出$h_{t+1}$
+
+隐藏层$h_t=f(W_hx_t+U_hh_{t-1}+b_h)$,$h_0=0$
+
+输出层$y_t=g(U_th_{t}+b_y)$
+
+局限性：长期依赖问题，前期的内容很容易消失，出现遗忘。
+
+梯度消失和梯度爆炸。
+
+\section{长短期记忆网络LSTM}
+
+引入门控单元来控制内容的记忆和遗忘。
+
+门控函数：$InputVector \dot GateVector = OutputVector$，门控向量的值从0到1变化。
+
+遗忘门：控制是否要遗忘上次的信息$f_t=sigmoid([h_{t-1},x_t]W_f+b_f)$
+
+计算输入门：控制这次输入是否要计算$i_t$。计算信息向量$\hat{C}_i$
+
+计算新的细胞向量：考量遗忘和计算输入门和原来的细胞向量$C_t=f_t*C_{t-1}+\hat{C}_i*i_t$
+
+输出：考量细胞向量和输入，获得新的$h_t$
+
+\end{document}
