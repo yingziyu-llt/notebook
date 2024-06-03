@@ -1,0 +1,155 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+  transformer
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+
+\section{动机}
+\subsection{现有模型的缺陷}
+\paragraph{CNN}可以用于文本处理，问题：感受有限，不能捕捉全局依赖关系。
+\paragraph{RNN}长序列出现梯度消失和梯度爆炸
+\paragraph{LSTM和GRU}误差积累问题，效率低下。
+
+\subsection{注意力}
+从视觉来看，人的眼睛只有有限的处理能力，而忽略无关的信息。这就是有注意力机制。有空间选择性和特征选择性。是一种很稀缺的资源。
+
+人看东西的时候只关心中央的一小部分，外周的使用高效编码来快速模糊处理。
+
+自注意力和位置编码，利用自注意力机制，可以建立一个长距离的句子内部联系。
+
+\section{自注意力机制}
+注意力提示：查询、键和值。
+
+键和值是非自主性提示，查询是自主性提示。
+
+将Key和Query逐个通过注意力汇聚打分，获得两者之间的相似度，给每个值给相关的函数。常见的注意力汇聚：点积和加分。
+
+$$f(x)=\sum^n_{i=1}\alpha(x,x_i)y_i$$
+
+Q,K,V三个是输入的三个线性变换得到的三个空间。$dim( K )= dim( Q )= dim( R ) = D_K$ $Q=Input*W_Q$这三个矩阵将用于计算注意力。
+
+打分函数-缩放点积：用点积计算QK的相似度，得到注意力权重矩阵Z,将它与V相乘就可以得到目标。
+
+缩放的作用：防止某个值过大导致softmax梯度过小。
+$$softmax(\frac{Q* K^T}{\sqrt{D_k}})V=Z$$
+
+再将注意力矩阵和V相乘，获得应用注意力汇聚后的V矩阵。
+
+加性注意力：引入更多可学习参数和非线性层，但计算复杂度大。
+
+$$Attention = softmax(tanh(Q*W_Q+K*W_K)*V_a^T)*V$$
+$V_a$是可学习的权重向量。
+
+\section{多头记忆力机制}、
+就是h个self-attention组合，将原本的内容映射到h各空间，关注不同的特征维度。将这h个注意力汇聚的输出concatinate在一起，然后用一个可学习的线性变化放在一起。
+
+\section{transformer}
+整体由编码器和解码器两个比分组成。都是有多个相同的层组合而成，每层包含一个多头注意力机制和全连接前馈往回落，中间用残差连接和层归一化连接。
+
+\paragraph{位置编码？？？？？？}
+transformer和RNN不同，是并行操作整个序列，于是需要标记位置来保证顺序信息不丢失。将位置信息加和到词嵌入的特征中。
+
+将位置转化为一个768维的向量，使用位置编码函数，找到？？？？？？？
+
+\paragraph{编码器}
+原输入序列经过词嵌入和位置编码，获得输入向量。用多头注意力的h组线性曾对词嵌入表示进行变换，映射到3个人空间，获得Q,K,V。用缩放点积计算注意力权重。
+
+\paragraph{AddNorm}
+将输入向量和注意力输出向量相加，获得残差连接的结果。
+
+对结果做层规范化。
+
+\paragraph{多个encoder堆叠}
+可以将多个编码器叠在一起，最后一个编码器的输出就是最终的编码器表示，将传递给解码器处理。
+
+\subsection{解码器}
+encoder的输出并没直接作为decoder的直接输⼊
+
+目标序列嵌⼊和位置编码：与编码器类似，目标序列首先经过嵌⼊层的处理得到词嵌⼊，并加⼊位置编码，得到最终的输⼊向量。
+
+要通过掩蔽多头注意力层，生成解码器自注意力矩阵，用来捕捉当前解码器状态和前面的解码器的信息。
+
+为了防止输入序列的信息泄漏，需要将后面你的词屏蔽，使用掩码(mask)来屏蔽。将注意力矩阵和掩码相加，要掩蔽就将那个位置的掩码设为$-\inf$
+
+接下来编码器-解码器注意⼒层
+（encoder-decoder attention）将编码器
+输出的信息有效地融⼊到当前解码器状
+态中，以帮助解码器更好地进⾏下⼀步
+预测。
+
+在编码器－解码器注意⼒中，Q来自前
+⼀个解码器层的输出，⽽K和V来自编码
+器的输出。
+
+\section{预训练模型}
+
+预训练阶段：在无标签数据上学习通用语言表示，没有专业性。
+
+微调阶段：针对某个特定任务进行微调，做出专业模型。
+
+常见预训练模型：GPT和BERT。GPT单向上下文信息，BERT学习双向信息。
+
+GPT：Generative Pre-Trained Transformer，基于Transformer的预训练生成语言模型，在大量无标签文本数据上进行预训练，学习通用表示；使用多个Transformer解码器堆叠。预测下一个词的概率
+
+微调阶段：
+
+为特定任务添加任务相关的头部
+Head（如分类层、序列标注层
+等）。
+
+使用标注的任务数据训练进⾏微
+调，优化任务相关的损失函数。
+
+参数规模提升带来能⼒“涌现Emergent ”
+
+原因
+
+1. ⼤量的训练数据：⼈类积累的所有信息
+
+2. 模型容量：充分学习数据
+
+3. 自回归和⽆监督训练：不需要标注海量数据
+
+4. 迁移学习和微调：适应不同任务
+
+5. 多任务学习：提⾼泛化性
+
+
+
+\end{document}]

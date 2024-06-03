@@ -31,7 +31,7 @@
     basewidth       =   0.5em,
 }
 \title{
-	cpp 11
+	cpp 11与高级
 }
 \author{
 	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
@@ -39,6 +39,7 @@
 
 \begin{document}
 \maketitle
+\section{cpp11}
 \paragraph{统一初始化方法}使用大括号左作为数组或者容器作为统一初始化方法。
 
 可以防止缩窄，即禁止将数值放入无法放置它的变量。
@@ -64,4 +65,44 @@
 修饰表：=传值，\&传引用
 
 function<返回值(参数表)> func;可以做lambda或者自由函数。
+
+\section{cpp高级}
+\subsection{类型转换}
+常见类型转换的方式有(type)expression/type(expression)/(expression)自动判断类型转换
+
+但类型转换可能会出现也指针、指向位置错误、截断等问题。
+
+cpp提供了4中类型转换判断符：static_cast/dynamic_cast/reinterpret_cast/const_cast，用..._cast<type>(expression)
+
+static_cast用于自然、低风险的转换，可能会截断。不能用于不同类型指针/整型和指针/不同类型引用的转换。
+
+reinterpret_cast:不同类型的指针之间的转换，不同类型的引用之间转换，指针和能容下指针之间的转换，是逐个比特拷贝的操作。
+
+const_cast:用来去除const属性的转换，将const引用转化成同类型的非const引用，将const指针转换为同类型非const指针。
+
+dynamic_cast:将基类的指针和引用转化为派生类的指针和引用，不安全就会返回NULL。不能用于将非多态基类的指针和引用转化为派生类的指针和引用。
+
+\subsection{异常处理}
+希望程序出现异常的时候不要直接boom,而是能反馈异常、对已经发生的事做一些处理等等。
+
+throw抛出异常，try...catch捕捉异常。
+
+catch(type errorName){
+
+  ...
+
+}
+
+为了抛完异常让调用者处理，可以在catch里面继续throw
+
+标准异常类：由exception 派生，常用类型：
+
+bad_cast:dynamic_cast不能正常转化的时候抛出。
+bad_alloc:内存不足
+out_of_range:用at访问vector和string越界抛出这个异常。
+
+\subsection{多文件}
+
+使用其他文件里面的全局变量/函数：extern ...
+
 \end{document}

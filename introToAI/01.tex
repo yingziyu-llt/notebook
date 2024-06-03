@@ -1,0 +1,89 @@
+% vim:ft=tex:
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{listings}
+
+\lstset{
+    basicstyle          =   \sffamily,          % 基本代码风格
+    keywordstyle        =   \bfseries,          % 关键字风格
+    commentstyle        =   \rmfamily\itshape,  % 注释的风格，斜体
+    stringstyle         =   \ttfamily,  % 字符串风格
+    flexiblecolumns,                % 别问为什么，加上这个
+    numbers             =   left,   % 行号的位置在左边
+    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不现实了
+    numberstyle         =   \zihao{-5}\ttfamily,    % 行号的样式，小五号，tt等宽字体
+    showstringspaces    =   false,
+    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+    frame               =   lrtb,   % 显示边框
+}
+
+\lstdefinestyle{Python}{
+    language        =   Python, % 语言选Python
+    basicstyle      =   \zihao{-5}\ttfamily,
+    numberstyle     =   \zihao{-5}\ttfamily,
+    keywordstyle    =   \color{blue},
+    keywordstyle    =   [2] \color{teal},
+    stringstyle     =   \color{magenta},
+    commentstyle    =   \color{red}\ttfamily,
+    breaklines      =   true,   % 自动换行，建议不要写太长的行
+    columns         =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须加
+    basewidth       =   0.5em,
+}
+\title{
+  人工智能的初心
+}
+\author{
+	Letian Lin --- \texttt{yingziyu-Lin@outlook.com}
+}
+
+\begin{document}
+\maketitle
+\section{初心：有智能的机器}
+图灵1948：人工智能的研究目标就是让机器表现出像人一样的智能行为，与人脑类比，人的智力通过教育开发，机器仿照婴儿大脑通过奖励惩罚教育，目标是通用AI
+
+任务：定理证明，说话，看图，下棋
+
+路径：将人类智慧输入机器（符号派），机器进化：连接派，行为派
+
+达特茅斯会议：正式提出人工智能
+
+\section{早期：百花齐放的春天}
+代表：逻辑理论家、下棋机器⼈、自然语⾔处理、STRIPS、细胞自动机、感知机
+
+逻辑理论家：Simon由试验得到结论：人类问题的求解是一个搜索的过程，效果与启发式函数有关。
+
+深蓝：MINMAX,alpha-beta剪枝，启发式
+
+乔治敦实验：有机化学翻译,10年后失败 ELIZA：查表，关键词打分
+
+积木世界：逻辑推理 STRIPS：自动规划器，搜索。 细胞自动机
+
+感知机：只有一层的神经网络。无法处理线性不可分问题。《感知机：计算几何学》将神经网络打入谷底。
+
+\section{中期：符号主义的繁荣}
+代表：定理证明、专家系统、知识库、IBM Watson 、日本五代机
+
+核心其实是用一个个小定理和三段论做定理证明，衍生出了知识图谱。
+
+王浩是逻辑系定理证明的先驱，吴文俊则开几何系定理证明的风气之先，
+
+Dendral 第一个专家系统软件
+
+MYCIN 任务：识别导致严重感染的细菌，并推荐合适剂量的抗生素 主要技术贡献：不精确推理
+
+cyc：最早的知识图谱，把知识编码，建立知识库。
+
+知识表示 语义网 Semantic Network;顶点表示概念，顶点间的有向或
+者无向边表示语义关系。
+
+典型的标准语义网表示成三元组。
+
+语义网在自然语言处理中用于语
+义分析和词义消歧。
+
+IBM watson 问答机器人
+\section{近期：连接主义的昌盛}
+
+
+\end{document}
