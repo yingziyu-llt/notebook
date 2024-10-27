@@ -29,11 +29,11 @@ If we call the first one land on 6 event $E$,the sum of the dice is $i$ $F_i$, t
   We first find a general term of the expansion:
 
   $ (sqrt(x)/sqrt(3) + sqrt(3)/(2x^2) )^10 = sum_(k=0)^(10) vec(k,10) (sqrt(x)/sqrt(3) )^(10-k) (sqrt(3)/(2x^2) )^k\
-  = sum_(k=0)^(10) vec(k,10) x^(5 -5 / 2 k) 3 ^ (k-5) $
+  = sum_(k=0)^(10) vec(k,10) x^(5 -5 / 2 k) 3 ^ (k-5)2^(-k) $
   So when $ k = 2 $
   the term is independent of $x$.
   
-   The term is $ vec(2,10) 3 ^ (2-5) = 5/3 $
+   The term is $ vec(2,10) 3 ^ (2-5)2^(-2) = 5/12 $
   ]
 
 #通用作业.hw_prob("problem 3")[
@@ -70,7 +70,7 @@ $P (E_1 E_2 E_3 E_4)\ = P(F_4)\ =P(F_4 | F_3)P(F_3 | F_2)P(F_2 | S)P(S)\ = 39/51
   ),
   [Monday], [.15], [.05],
 [Tuesday], [.20],[.10],
-[Wednesday], [.25], [.10],
+[Wednesday], [.25], [.10], 
 [Thursday], [.15], [.15],
 [Friday], [.10], [.20],
 )
